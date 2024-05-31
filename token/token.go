@@ -16,8 +16,26 @@ const (
 	INT   = "INT"   // 1343456
 
 	// Operators
-	ASSIGN = "="
-	PLUS   = "+"
+	PLUS     = "+"
+	MINUS    = "-"
+	EXCLAIM  = "!"
+	MULTIPLY = "*"
+	DIVIDE   = "/"
+
+	// Assignments
+	ASSIGN  = "="
+	PLUSEQ  = "+="
+	MINUSEQ = "-="
+	MULTEQ  = "*="
+	DIVEQ   = "/="
+
+	// Comparators
+	LT  = "<"
+	GT  = ">"
+	LEQ = "<="
+	GEQ = ">="
+	EQ  = "=="
+	NEQ = "!="
 
 	// Delimiters
 	COMMA     = ","

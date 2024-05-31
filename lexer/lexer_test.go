@@ -102,3 +102,73 @@ let result = add(three, four);
 
 	runTestNextToken(t, input, tests)
 }
+
+func TestNextToken3_extraSymbols(t *testing.T) {
+	input := `
+let num = 12 / 3;
+4 * 3;
+4 < 3 > 4534 / 3 ! 34
+`
+
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.LET, "let"},
+		{token.IDENT, "num"},
+		{token.ASSIGN, "="},
+		{token.INT, "12"},
+		{token.DIVIDE, "/"},
+		{token.INT, "3"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "4"},
+		{token.MULTIPLY, "*"},
+		{token.INT, "3"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "4"},
+		{token.LT, "<"},
+		{token.INT, "3"},
+		{token.GT, ">"},
+		{token.INT, "4534"},
+		{token.DIVIDE, "/"},
+		{token.INT, "3"},
+		{token.EXCLAIM, "!"},
+		{token.INT, "34"},
+	}
+
+	runTestNextToken(t, input, tests)
+}
+
+func TestNextToken4_doubleTokens(t *testing.T) {
+	input := `!=*!= =+(){},; <= >= += -= *= /= < > == let`
+
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.NEQ, "!="},
+		{token.MULTIPLY, "*"},
+		{token.NEQ, "!="},
+		{token.ASSIGN, "="},
+		{token.PLUS, "+"},
+		{token.LPAREN, "("},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.RBRACE, "}"},
+		{token.COMMA, ","},
+		{token.SEMICOLON, ";"},
+		{token.LEQ, "<="},
+		{token.GEQ, ">="},
+		{token.PLUSEQ, "+="},
+		{token.MINUSEQ, "-="},
+		{token.MULTEQ, "*="},
+		{token.DIVEQ, "/="},
+		{token.LT, "<"},
+		{token.GT, ">"},
+		{token.EQ, "=="},
+		{token.LET, "let"},
+		{token.EOF, ""},
+	}
+
+	runTestNextToken(t, input, tests)
+}

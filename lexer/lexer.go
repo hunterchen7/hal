@@ -30,6 +30,33 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+// serves a similar purpose to readChar except it doesn't increment
+// position and readPosition. We only want to "peek" the next character,
+// and not move around to it.
+// Most lexers and parsers have a "peek" function that looks ahead and usually
+// only returns the next character. The difficulty of parsing different languages
+// often comes down to how far ahead you have to peek ahead (or backwards)
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
+// this function is used specifically for when a token is 2 characters, it is meant as replacements
+// of the if statements found on page 24.
+// I don't specify that it must be equal to '=' in its usage, since there may be other potential
+// token endings, like "++" or something similar, which may be implemented in the future.
+func (l *Lexer) doubleToken(tokenType token.TokenType) token.Token {
+	ch := l.ch
+	l.readChar()
+	return token.Token{
+		Type:    tokenType,
+		Literal: string(ch) + string(l.ch),
+	}
+}
+
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
@@ -52,7 +79,53 @@ func (l *Lexer) NextToken() token.Token {
 			tok = newToken(token.ILLEGAL, l.ch)
 		}
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.EQ)
+		} else {
+			tok = newToken(token.ASSIGN, l.ch)
+		}
+	case '+':
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.PLUSEQ)
+		} else {
+			tok = newToken(token.PLUS, l.ch)
+		}
+	case '-':
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.MINUSEQ)
+		} else {
+			tok = newToken(token.MINUS, l.ch)
+		}
+	case '!':
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.NEQ)
+		} else {
+			tok = newToken(token.EXCLAIM, l.ch)
+		}
+	case '*':
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.MULTEQ)
+		} else {
+			tok = newToken(token.MULTIPLY, l.ch)
+		}
+	case '/':
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.DIVEQ)
+		} else {
+			tok = newToken(token.DIVIDE, l.ch)
+		}
+	case '<':
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.LEQ)
+		} else {
+			tok = newToken(token.LT, l.ch)
+		}
+	case '>':
+		if l.peekChar() == '=' {
+			tok = l.doubleToken(token.GEQ)
+		} else {
+			tok = newToken(token.GT, l.ch)
+		}
 	case ';':
 		tok = newToken(token.SEMICOLON, l.ch)
 	case '(':
@@ -61,8 +134,6 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.RPAREN, l.ch)
 	case ',':
 		tok = newToken(token.COMMA, l.ch)
-	case '+':
-		tok = newToken(token.PLUS, l.ch)
 	case '{':
 		tok = newToken(token.LBRACE, l.ch)
 	case '}':
