@@ -1,8 +1,8 @@
 package lexer
 
 import (
+	"hal/token"
 	"testing"
-	"waiig/token"
 )
 
 func runTestNextToken(t *testing.T, input string, output []struct {

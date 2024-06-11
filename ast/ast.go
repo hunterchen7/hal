@@ -1,6 +1,6 @@
 package ast
 
-import "waiig/token"
+import "hal/token"
 
 type Node interface {
 	TokenLiteral() string // used only for debugging purposes

@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"waiig/ast"
-	"waiig/lexer"
-	"waiig/token"
+	"hal/ast"
+	"hal/lexer"
+	"hal/token"
 )
 
 // Parser 3 fields: l, currToken and peekToken
