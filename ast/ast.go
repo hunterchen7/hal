@@ -38,7 +38,7 @@ func (p *Program) TokenLiteral() string {
 
 // LetStatement 3 fields, 1 for identifier, 1 for expression that produces the value, and one for the token
 type LetStatement struct {
-	Token token.Token
+	Token token.Token // the let token
 	Name  *Identifier // holds the identifier of the binding
 	Value Expression  // the value of the expression that produces the value
 }
@@ -46,6 +46,18 @@ type LetStatement struct {
 func (ls *LetStatement) statementNode() {}
 
 func (ls *LetStatement) TokenLiteral() string {
+	return ls.Token.Literal
+}
+
+// ReturnStatement consists solely of the "return" keyword and an expression
+type ReturnStatement struct {
+	Token       token.Token // the "return" token
+	ReturnValue Expression
+}
+
+func (ls *ReturnStatement) statementNode() {}
+
+func (ls *ReturnStatement) TokenLiteral() string {
 	return ls.Token.Literal
 }
 

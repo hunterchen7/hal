@@ -42,6 +42,35 @@ let foobar = 12345;
 	}
 }
 
+func TestReturnStatement(t *testing.T) {
+	input := `
+return 5;
+return 10;
+return 323;
+`
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	if len(program.Statements) != 3 {
+		t.Fatalf("program.Statements does not contain 3 statements, got %d instead", len(program.Statements))
+	}
+
+	for _, statement := range program.Statements {
+		returnStatement, ok := statement.(*ast.ReturnStatement)
+
+		if !ok {
+			t.Errorf("statement not *ast.ReturnStatement, got %T instead", statement)
+			continue
+		}
+		if returnStatement.TokenLiteral() != "return" {
+			t.Errorf("returnStatement.TokenLiteral not 'return', got %q instead", returnStatement.TokenLiteral())
+		}
+	}
+}
+
 // check the parser for errors, and if it has any, print them as test errors and stop execution of test
 func checkParseErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
